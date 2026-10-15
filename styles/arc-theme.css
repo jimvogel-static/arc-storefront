@@ -220,6 +220,11 @@ header nav .nav-brand strong {
 header nav .nav-brand,
 header nav .nav-brand a { white-space: nowrap; }
 
+header nav .nav-brand {
+  flex: 0 0 auto;
+  margin-right: var(--spacing-medium);
+}
+
 header nav .nav-sections ul > li > a,
 header nav .nav-sections ul > li,
 header nav .nav-sections ul > li > p {

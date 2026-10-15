@@ -101,19 +101,41 @@ body {
   color: var(--arc-midnight);
 }
 
-/* ---------- prototype announcement bar ---------- */
-body::before {
-  content: 'Bounteous Pulse prototype storefront · demo data, no real orders · try code PULSE20';
-  display: block;
+/* ---------- prototype announcement bar (built by scripts/arc-mock/mock.js) ---------- */
+.pulse-topbar {
   grid-row: 1;
   position: relative;
   z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.4rem;
   padding: 0.8rem 1.6rem;
   background: var(--arc-midnight);
   color: #fff;
   font: var(--type-details-caption-1-font);
   letter-spacing: 0.04em;
-  text-align: center;
+}
+
+.pulse-topbar__msg { text-align: center; }
+
+.pulse-topbar__tools { display: inline-flex; gap: 1.2rem; white-space: nowrap; }
+
+.pulse-topbar a:any-link {
+  color: #fff !important;
+  font: var(--type-details-caption-1-font) !important;
+  opacity: 0.4;
+  text-decoration: none;
+}
+
+.pulse-topbar a:any-link:hover { opacity: 1; text-decoration: underline; }
+
+@media (min-width: 900px) {
+  .pulse-topbar { justify-content: space-between; padding: 0.8rem max(32px, calc((100vw - 1264px) / 2 + 32px)); }
+}
+
+@media (max-width: 599px) {
+  .pulse-topbar { flex-direction: column; gap: 0.4rem; }
 }
 
 body { grid-template-rows: auto auto 1fr auto; }

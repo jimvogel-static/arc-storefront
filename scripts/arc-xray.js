@@ -123,7 +123,8 @@ function draw() {
     const color = COLORS[info.kind];
     const box = el('div', `position:absolute;left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px;`
       + `outline:2px dashed ${color};outline-offset:-2px;border-radius:8px;background:${color}0d;`);
-    const tag = el('div', `position:absolute;left:6px;top:6px;max-width:calc(100% - 12px);padding:6px 10px;border-radius:12px;`
+    const side = name === 'header' ? 'right:6px;top:calc(100% + 4px);' : 'left:6px;top:6px;';
+    const tag = el('div', `position:absolute;${side}max-width:min(420px, calc(100% - 12px));padding:6px 10px;border-radius:12px;`
       + 'background:#0B111C;color:#fff;font:600 12px/1.35 \'Nunito Sans\',system-ui,sans-serif;box-shadow:0 4px 16px rgb(0 0 0 / 25%);');
     const title = el('div', `color:${color};letter-spacing:.04em;text-transform:uppercase;font-size:10px;`, info.kind === 'arc' ? 'Added for ARC' : 'Boilerplate block');
     tag.append(title, el('div', 'font-size:13px;', `${info.label}  ·  ${name}`));
@@ -151,7 +152,20 @@ function panel() {
 
   const p = el('div', 'position:fixed;left:16px;bottom:16px;width:340px;z-index:2147483001;padding:16px 18px;border-radius:24px;'
     + 'background:#0B111C;color:#fff;font:400 13px/1.5 \'Nunito Sans\',system-ui,sans-serif;box-shadow:0 12px 40px rgb(0 0 0 / 35%);');
-  p.append(el('div', 'font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#853EFF;', 'ARC X-ray'));
+  p.id = 'arc-xray-panel';
+  const collapsed = window.sessionStorage.getItem('arc-xray-min') === '1';
+  const head = el('div', 'font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#853EFF;cursor:pointer;pointer-events:auto;',
+    collapsed ? 'ARC X-ray  ▸  show details' : 'ARC X-ray  ▾  hide details');
+  head.addEventListener('click', () => {
+    window.sessionStorage.setItem('arc-xray-min', collapsed ? '0' : '1');
+    const np = panel(); p.replaceWith(np);
+  });
+  p.append(head);
+  if (collapsed) {
+    p.style.width = 'auto';
+    p.append(el('div', 'font-weight:700;font-size:15px;margin-top:2px;', tpl));
+    return p;
+  }
   p.append(el('div', 'font-weight:700;font-size:17px;margin:2px 0 4px;', tpl));
   p.append(el('div', 'opacity:.8;', tplNote));
   p.append(el('div', 'margin-top:10px;', `Document: ${window.location.pathname.startsWith('/products/') ? '/products/default' : window.location.pathname}`));
@@ -175,8 +189,7 @@ function panel() {
 
 export default function startXray() {
   document.body.append(layer);
-  let p = panel();
-  document.body.append(p);
+  document.body.append(panel());
   let raf;
   const schedule = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); };
   window.addEventListener('scroll', schedule, { passive: true });
@@ -187,6 +200,11 @@ export default function startXray() {
     const n = document.querySelector(sel);
     if (n) mo.observe(n, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-block-status'] });
   });
-  setInterval(() => { const np = panel(); p.replaceWith(np); p = np; schedule(); }, 3000);
+  setInterval(() => {
+    const cur = document.getElementById('arc-xray-panel');
+    const np = panel();
+    if (cur) cur.replaceWith(np); else document.body.append(np);
+    schedule();
+  }, 3000);
   schedule();
 }

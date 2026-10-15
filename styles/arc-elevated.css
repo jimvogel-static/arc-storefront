@@ -121,15 +121,28 @@ html.look-elevated main .hero p { font: normal normal 300 1.9rem/1.65 var(--type
 html.look-elevated main .hero p.button-wrapper,
 html.look-elevated main .hero p:has(a) { display: flex; gap: 12px; flex-wrap: wrap; margin-top: var(--spacing-medium); }
 
-html.look-elevated main .hero a.button:any-link { padding: 1.5rem 3rem; font-size: 1.6rem; }
-
-html.look-elevated main .hero a.button.secondary,
-html.look-elevated main .hero p a + a {
-  background: rgb(255 255 255 / 12%) !important;
-  border: 1px solid rgb(255 255 255 / 45%) !important;
+/* hero calls to action: both links become pills (first solid gradient, second glass) */
+html.look-elevated main .hero p a:any-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 1.5rem 3rem;
+  border-radius: 999px;
+  background: var(--arc-grad-button) !important;
+  border: 0;
   color: #fff !important;
+  font: var(--type-button-2-font);
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgb(133 62 255 / 35%);
+}
+
+html.look-elevated main .hero p a:any-link + a:any-link {
+  background: rgb(255 255 255 / 12%) !important;
+  border: 1px solid rgb(255 255 255 / 45%);
+  box-shadow: none;
   backdrop-filter: blur(6px);
 }
+
+html.look-elevated main .hero p a:any-link:hover { filter: brightness(1.08); text-decoration: none; }
 
 /* ---------- promo strip ---------- */
 html.look-elevated main .section.promo-strip { margin: 0; background: var(--arc-indigo); }
@@ -245,7 +258,25 @@ html.look-elevated main .section.editorial .columns .columns-img-col img {
   object-fit: cover;
 }
 
+/* brand checkmark bullets inside editorial columns */
+html.look-elevated main .section.editorial .columns ul { list-style: none; padding-left: 0; }
+html.look-elevated main .section.editorial .columns ul > li { position: relative; padding-left: 2.8rem; margin: 0.8rem 0; }
+html.look-elevated main .section.editorial .columns ul > li::before { content: '✓'; position: absolute; left: 0; color: var(--arc-indigo); font-weight: 700; }
+
+/* editorial call to action as a pill */
+html.look-elevated main .section.editorial .columns a:any-link {
+  display: inline-flex;
+  margin-top: var(--spacing-small);
+  padding: 1.3rem 2.6rem;
+  border-radius: 999px;
+  background: var(--arc-grad-button) !important;
+  color: #fff !important;
+  font-weight: 600;
+  text-decoration: none;
+}
+
 html.look-elevated main .section.editorial.dark { background: transparent; padding: 0; }
+html.look-elevated main .section.editorial.dark h6 { color: #c7b1ff; }
 html.look-elevated main .section.editorial.dark .columns > div { background: var(--arc-midnight); }
 html.look-elevated main .section.editorial.dark h2,
 html.look-elevated main .section.editorial.dark p { color: #fff; }

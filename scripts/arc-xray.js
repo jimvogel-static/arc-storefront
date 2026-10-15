@@ -1,5 +1,5 @@
 /*
- * ARC X-ray — a presenter overlay that labels what each part of the page is.
+ * Pulse X-ray: a presenter overlay that labels what each part of the page is.
  * Turn on with ?xray (it stays on as you browse), turn off with ?xray=off.
  * Purely visual: draws outlines in a fixed layer above the page and changes
  * nothing about the boilerplate's own markup or behavior.
@@ -7,7 +7,7 @@
 
 const COLORS = {
   boilerplate: '#34B3FF', // Electric Blue: stock boilerplate block
-  arc: '#FF4F59', // Coral: added for the ARC prototype
+  arc: '#FF4F59', // Coral: added for this prototype (blocks and custom touches)
   dropin: '#C7B1FF', // Purple Rain 300: readable on Midnight; Commerce drop-ins used by the block
 };
 
@@ -15,8 +15,8 @@ const COLORS = {
 const BLOCKS = {
   header: { kind: 'boilerplate', label: 'Header', note: 'Content from the /nav document', dropins: ['cart (mini-cart)', 'product-discovery (search)', 'auth (sign-in menu)', 'wishlist'] },
   footer: { kind: 'boilerplate', label: 'Footer', note: 'Content from the /footer document' },
-  'arc-hero': { kind: 'arc', label: 'ARC Hero', note: 'Added for ARC: simple content block' },
-  'arc-tiles': { kind: 'arc', label: 'ARC Category Tiles', note: 'Added for ARC: simple content block' },
+  'arc-hero': { kind: 'arc', label: 'Prototype Hero', note: 'Added for the prototype: simple content block' },
+  'arc-tiles': { kind: 'arc', label: 'Prototype Category Tiles', note: 'Added for the prototype: simple content block' },
   hero: { kind: 'boilerplate', label: 'Hero' },
   cards: { kind: 'boilerplate', label: 'Cards' },
   columns: { kind: 'boilerplate', label: 'Columns' },
@@ -63,7 +63,7 @@ const BLOCKS = {
 function pageTemplate() {
   const p = window.location.pathname;
   const has = (b) => !!document.querySelector(`main .${b}`);
-  if (p === '/' || p === '/index') return ['Home', 'A content page authored in DA.live. Two ARC blocks plus a boilerplate recommendations block.'];
+  if (p === '/' || p === '/index') return ['Home', 'A content page authored in DA.live. Boilerplate look: two small added blocks. Elevated look: stock Hero, Cards and Columns blocks. Recommendations in both.'];
   if (p.startsWith('/products/')) return ['Product page (PDP)', 'One template document (/products/default) serves every product URL via folder mapping. The SKU comes from the URL.'];
   if (has('product-list-page')) {
     return p.startsWith('/search')
@@ -111,6 +111,7 @@ function targets() {
   if (header) list.push(['header', header]);
   document.querySelectorAll('main .block[data-block-name]').forEach((b) => list.push([b.dataset.blockName, b]));
   if (footer) list.push(['footer', footer]);
+  document.querySelectorAll('[data-pulse-custom]').forEach((n) => list.push([`custom:${n.dataset.pulseCustom}`, n]));
   return list;
 }
 
@@ -119,17 +120,19 @@ function draw() {
   targets().forEach(([name, node]) => {
     const r = node.getBoundingClientRect();
     if (r.width < 4 || r.height < 4 || r.bottom < 0 || r.top > window.innerHeight) return;
-    const info = BLOCKS[name] || { kind: 'boilerplate', label: name };
+    const info = name.startsWith('custom:')
+      ? { kind: 'arc', custom: true, label: name.slice(7) }
+      : (BLOCKS[name] || { kind: 'boilerplate', label: name });
     const color = COLORS[info.kind];
     const box = el('div', `position:absolute;left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px;`
       + `outline:2px dashed ${color};outline-offset:-2px;border-radius:8px;background:${color}0d;`);
     const side = name === 'header' ? 'right:6px;top:calc(100% + 4px);' : 'left:6px;top:6px;';
     const tag = el('div', `position:absolute;${side}max-width:min(420px, calc(100% - 12px));padding:6px 10px;border-radius:12px;`
       + 'background:#0B111C;color:#fff;font:600 12px/1.35 \'Nunito Sans\',system-ui,sans-serif;box-shadow:0 4px 16px rgb(0 0 0 / 25%);');
-    const title = el('div', `color:${color};letter-spacing:.04em;text-transform:uppercase;font-size:10px;`, info.kind === 'arc' ? 'Added for ARC' : 'Boilerplate block');
-    tag.append(title, el('div', 'font-size:13px;', `${info.label}  ·  ${name}`));
+    const title = el('div', `color:${color};letter-spacing:.04em;text-transform:uppercase;font-size:10px;`, info.kind === 'arc' ? (info.custom ? 'Custom touch' : 'Added for the prototype') : 'Boilerplate block');
+    tag.append(title, el('div', 'font-size:13px;', info.custom ? info.label : `${info.label}  ·  ${name}`));
     if (info.note) tag.append(el('div', 'font-weight:400;opacity:.8;', info.note));
-    const live = name === 'header' ? null : dropinsFor(name);
+    const live = (name === 'header' || info.custom) ? null : dropinsFor(name);
     const list = live && live.length ? live : (live ? [] : (info.dropins || []));
     if (list.length) {
       const d = el('div', `margin-top:4px;color:${COLORS.dropin};font-weight:600;`, `Drop-ins: ${list.join(', ')}`);
@@ -142,7 +145,7 @@ function draw() {
 
 function panel() {
   const [tpl, tplNote] = pageTemplate();
-  const blocks = targets().map(([n]) => n);
+  const blocks = targets().map(([n]) => n).filter((n) => !n.startsWith('custom:'));
   const dropins = new Set();
   blocks.forEach((n) => {
     const live = n === 'header' ? null : dropinsFor(n);
@@ -155,7 +158,7 @@ function panel() {
   p.id = 'arc-xray-panel';
   const collapsed = window.sessionStorage.getItem('arc-xray-min') === '1';
   const head = el('div', 'font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#C7B1FF;cursor:pointer;pointer-events:auto;',
-    collapsed ? 'ARC X-ray  ▸  show details' : 'ARC X-ray  ▾  hide details');
+    collapsed ? 'Pulse X-ray  ▸  show details' : 'Pulse X-ray  ▾  hide details');
   head.addEventListener('click', () => {
     window.sessionStorage.setItem('arc-xray-min', collapsed ? '0' : '1');
     const np = panel(); p.replaceWith(np);
@@ -169,12 +172,12 @@ function panel() {
   p.append(el('div', 'font-weight:700;font-size:17px;margin:2px 0 4px;', tpl));
   p.append(el('div', 'opacity:.8;', tplNote));
   p.append(el('div', 'margin-top:10px;', `Document: ${window.location.pathname.startsWith('/products/') ? '/products/default' : window.location.pathname}`));
-  p.append(el('div', '', `Blocks on page: ${blocks.length} (${arcCount} added for ARC)`));
+  p.append(el('div', '', `Blocks on page: ${blocks.length} (${arcCount} added for the prototype)`));
   p.append(el('div', '', `Drop-ins in use: ${[...dropins].join(', ') || 'none'}`));
-  p.append(el('div', 'margin-top:10px;opacity:.8;', 'Look and feel: Bounteous theme applied to the boilerplate design tokens (one stylesheet). Data: in-browser demo mock.'));
+  p.append(el('div', 'margin-top:10px;opacity:.8;', document.documentElement.classList.contains('look-elevated') ? 'Look: Elevated. Same stock blocks and drop-ins, restyled by one extra stylesheet, plus a few custom touches (coral). Data: in-browser demo mock.' : 'Look: Boilerplate. Bounteous theme applied to the boilerplate design tokens (one stylesheet). Data: in-browser demo mock.'));
 
   const legend = el('div', 'display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:12px;');
-  [['Boilerplate block', COLORS.boilerplate], ['Added for ARC', COLORS.arc], ['Commerce drop-ins', COLORS.dropin]].forEach(([t, c]) => {
+  [['Boilerplate block', COLORS.boilerplate], ['Added / custom', COLORS.arc], ['Commerce drop-ins', COLORS.dropin]].forEach(([t, c]) => {
     const i = el('span', '');
     i.append(el('span', `display:inline-block;width:10px;height:10px;border-radius:3px;background:${c};margin-right:6px;vertical-align:middle;`), document.createTextNode(t));
     legend.append(i);

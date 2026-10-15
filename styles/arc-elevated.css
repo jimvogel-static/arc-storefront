@@ -38,6 +38,8 @@ html.look-elevated header .nav-wrapper {
   transition: box-shadow 0.25s var(--el-ease), background 0.25s var(--el-ease);
 }
 
+html.look-elevated header .nav-wrapper:has([aria-expanded='true']) { background: #fff; backdrop-filter: none; }
+
 html.look-elevated.is-scrolled header .nav-wrapper {
   background: rgb(255 255 255 / 94%);
   box-shadow: 0 8px 30px rgb(11 17 28 / 8%);

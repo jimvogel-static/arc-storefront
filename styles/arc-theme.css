@@ -277,13 +277,14 @@ header .dropdown-wrapper.nav-tools-wrapper .nav-dropdown-button {
 }
 
 /* header tools sit on the header's own background (no white box behind the icons) */
-header nav .nav-tools { background: transparent; }
+body header nav .nav-tools { background: transparent; }
 
 /* Account dropdown: a proper menu card sized to its content */
 @media (min-width: 900px) {
-  header nav .nav-sections .default-content-wrapper > ul > li.nav-drop { position: relative; }
+  body header nav .nav-sections .default-content-wrapper > ul > li.nav-drop { position: relative; }
 
-  header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] .submenu-wrapper {
+  body header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] .submenu-wrapper {
+    top: calc(100% + 12px);
     left: 50%;
     width: auto;
     min-width: 220px;
@@ -295,7 +296,7 @@ header nav .nav-tools { background: transparent; }
     box-shadow: 0 16px 40px rgb(11 17 28 / 18%);
   }
 
-  header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] ul {
+  body header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] ul {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -307,17 +308,17 @@ header nav .nav-tools { background: transparent; }
     overflow: visible;
   }
 
-  header nav .nav-sections .default-content-wrapper > ul > li ul::before { display: none; }
+  body header nav .nav-sections .default-content-wrapper > ul > li ul::before { display: none; }
 
-  header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] ul > li {
+  body header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] ul > li {
     min-width: 0;
     max-width: none;
     padding: 0;
     white-space: nowrap;
   }
 
-  header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] ul > li > a,
-  header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] ul > li > button {
+  body header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] ul > li > a,
+  body header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] ul > li > button {
     display: block;
     padding: 1rem 1.4rem !important;
     border-radius: 10px;
@@ -326,8 +327,8 @@ header nav .nav-tools { background: transparent; }
     text-decoration: none;
   }
 
-  header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] ul > li > a:hover,
-  header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] ul > li > button:hover {
+  body header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] ul > li > a:hover,
+  body header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] ul > li > button:hover {
     background: var(--color-neutral-200);
     color: var(--arc-indigo) !important;
   }

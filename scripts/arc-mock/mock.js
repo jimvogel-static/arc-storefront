@@ -68,14 +68,31 @@ window.fetch = function arcMockFetch(input, init) {
   return realFetch(input, init);
 };
 
-// Helpers for presenters: window.arcMock.reset() clears carts, orders, profile.
+// Helpers for presenters.
+// - window.arcMock.reset() clears carts, orders, profile and sign-in.
+// - Visiting any page with ?arc-reset (e.g. /?arc-reset) does the same, then
+//   lands on the home page. The footer carries a low-key "Reset demo" link.
+function clearDemoState() {
+  Object.keys(window.localStorage)
+    .filter((k) => k.startsWith('arc-mock:') || /^DROPIN__/.test(k) || /productViewHistory|purchaseHistory/.test(k))
+    .forEach((k) => window.localStorage.removeItem(k));
+  Object.keys(window.sessionStorage).forEach((k) => window.sessionStorage.removeItem(k));
+  document.cookie.split(';').map((c) => c.split('=')[0].trim()).filter((n) => /dropin|cart|auth/i.test(n))
+    .forEach((n) => { document.cookie = `${n}=; Max-Age=0; path=/`; });
+}
+
 window.arcMock = {
   reset() {
-    Object.keys(window.localStorage).filter((k) => k.startsWith('arc-mock:')).forEach((k) => window.localStorage.removeItem(k));
-    window.sessionStorage.removeItem('config');
-    document.cookie.split(';').map((c) => c.split('=')[0].trim()).filter((n) => /dropin|cart/i.test(n))
-      .forEach((n) => { document.cookie = `${n}=; Max-Age=0; path=/`; });
-    window.localStorage.removeItem('DROPIN__CART__CART__DATA');
-    window.location.reload();
+    clearDemoState();
+    window.location.replace(`${window.location.origin}/`);
   },
 };
+
+if (new URLSearchParams(window.location.search).has('arc-reset')) {
+  // The boilerplate prerenders links on hover; only reset on a real visit.
+  if (document.prerendering) {
+    document.addEventListener('prerenderingchange', () => window.arcMock.reset(), { once: true });
+  } else {
+    window.arcMock.reset();
+  }
+}

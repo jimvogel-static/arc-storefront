@@ -279,6 +279,14 @@ header .dropdown-wrapper.nav-tools-wrapper .nav-dropdown-button {
 /* header tools sit on the header's own background (no white box behind the icons) */
 body header nav .nav-tools { background: transparent; }
 
+/* sign-in, mini-cart and search panels under the header icons: rounded cards */
+body header nav .nav-tools-panel {
+  margin-top: 8px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgb(11 17 28 / 18%);
+}
+
 /* Account dropdown: a proper menu card sized to its content */
 @media (min-width: 900px) {
   body header nav .nav-sections .default-content-wrapper > ul > li.nav-drop { position: relative; }

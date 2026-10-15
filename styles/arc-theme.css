@@ -440,6 +440,15 @@ footer .footer .section > div {
 
 footer .footer p { color: rgb(255 255 255 / 78%); }
 
+/* presenter-only reset link: present but quiet */
+footer .footer a[href*='arc-reset'] {
+  opacity: 0.35;
+  font-size: 1.2rem !important;
+  font-weight: 400 !important;
+}
+
+footer .footer a[href*='arc-reset']:hover { opacity: 1; }
+
 footer .footer {
   color: #fff;
 }

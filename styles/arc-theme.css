@@ -4,6 +4,10 @@
  * then applies a thin layer of brand treatments. Loaded after styles.css.
  */
 
+/* Look switcher: sections tagged for one look are hidden in the other. */
+html:not(.look-elevated) main .section.look-elevated,
+html.look-elevated main .section.look-base { display: none !important; }
+
 :root, .dropin-design {
   /* ---- brand (Indigo is the primary accent on white) ---- */
   --color-brand-300: #8e82ff;
@@ -99,7 +103,7 @@ body {
 
 /* ---------- prototype announcement bar ---------- */
 body::before {
-  content: 'Bounteous ARC prototype storefront · demo data, no real orders · try code ARC20';
+  content: 'Bounteous Pulse prototype storefront · demo data, no real orders · try code PULSE20';
   display: block;
   grid-row: 1;
   position: relative;
@@ -442,16 +446,19 @@ footer .footer p { color: rgb(255 255 255 / 78%); }
 
 /* presenter-only reset link: present but quiet */
 footer .footer a[href*='arc-reset'],
-footer .footer a[href*='xray'] {
+footer .footer a[href*='xray'],
+footer .footer a[href*='look='] {
   opacity: 0.35;
   font-size: 1.2rem !important;
   font-weight: 400 !important;
 }
 
 footer .footer a[href*='arc-reset']:hover,
-footer .footer a[href*='xray']:hover { opacity: 1; }
+footer .footer a[href*='xray']:hover,
+footer .footer a[href*='look=']:hover { opacity: 1; }
 
-footer .footer a[href*='xray'] { margin-left: 0.8rem; }
+footer .footer a[href*='xray'],
+footer .footer a[href*='look='] { margin-left: 0.8rem; }
 
 footer .footer {
   color: #fff;

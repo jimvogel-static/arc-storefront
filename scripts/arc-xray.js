@@ -73,7 +73,7 @@ function pageTemplate() {
   if (p.startsWith('/cart')) return ['Cart', 'Boilerplate page, unchanged.'];
   if (p.startsWith('/checkout')) return ['Checkout', 'Boilerplate page, unchanged. One-page checkout.'];
   if (p.startsWith('/order-details') || p.startsWith('/sales/')) return ['Order confirmation / details', 'Boilerplate page, unchanged.'];
-  if (p.startsWith('/customer/')) return ['Account area', 'Boilerplate page, unchanged. One of 12 customer documents.'];
+  if (p.startsWith('/customer/')) return ['Account area', 'Boilerplate page, unchanged. Part of the starter account and sign-in pages.'];
   if (p.startsWith('/order-status')) return ['Guest order lookup', 'Boilerplate page, unchanged.'];
   if (p.startsWith('/wishlist')) return ['Wishlist', 'Boilerplate page, unchanged.'];
   return ['Content page', 'Authored in DA.live.'];

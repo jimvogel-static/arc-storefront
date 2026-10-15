@@ -19,7 +19,7 @@ const PHOTOS = new Set(['ARC-HD-001-midnight-1', 'ARC-HD-001-midnight-2', 'ARC-H
 const elevated = () => { try { return window.sessionStorage.getItem('pulse-look') === 'elevated'; } catch { return false; } };
 // Boilerplate look uses the flat illustrations; the Elevated look uses photography where it exists.
 const img = (name) => (elevated() && PHOTOS.has(name)
-  ? `${ORIGIN}/images/products/${name}.jpg`
+  ? `${ORIGIN}/images/products/${name.toLowerCase()}.jpg` // EDS publishes content paths in lowercase
   : `${ORIGIN}/images/arc/${name}.svg`);
 const b64 = (s) => btoa(s);
 const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);

@@ -370,6 +370,9 @@ html.look-elevated .checkout-order-summary {
   padding: var(--spacing-medium);
 }
 
+html.look-elevated .commerce-cart h1, html.look-elevated .commerce-cart h2,
+html.look-elevated .commerce-checkout h1, html.look-elevated .commerce-checkout h2 { font: normal normal 700 3rem/1.2 var(--type-base-font-family) !important; }
+
 /* ---------- footer: roomier, editorial ---------- */
 html.look-elevated footer .footer .section > div { padding-top: var(--spacing-xxbig); padding-bottom: var(--spacing-xxbig); }
 

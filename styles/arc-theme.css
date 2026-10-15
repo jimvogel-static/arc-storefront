@@ -441,13 +441,17 @@ footer .footer .section > div {
 footer .footer p { color: rgb(255 255 255 / 78%); }
 
 /* presenter-only reset link: present but quiet */
-footer .footer a[href*='arc-reset'] {
+footer .footer a[href*='arc-reset'],
+footer .footer a[href*='xray'] {
   opacity: 0.35;
   font-size: 1.2rem !important;
   font-weight: 400 !important;
 }
 
-footer .footer a[href*='arc-reset']:hover { opacity: 1; }
+footer .footer a[href*='arc-reset']:hover,
+footer .footer a[href*='xray']:hover { opacity: 1; }
+
+footer .footer a[href*='xray'] { margin-left: 0.8rem; }
 
 footer .footer {
   color: #fff;

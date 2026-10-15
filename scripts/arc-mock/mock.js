@@ -100,6 +100,19 @@ if (window.sessionStorage.getItem('arc-xray') === '1' && !document.prerendering)
   });
 }
 
+// The quiet footer "X-ray" link toggles the overlay on the current page.
+document.addEventListener('click', (e) => {
+  const a = e.target.closest?.('a[href*="xray"]');
+  if (!a || !a.closest('footer')) return;
+  e.preventDefault();
+  const on = window.sessionStorage.getItem('arc-xray') === '1';
+  if (on) window.sessionStorage.removeItem('arc-xray');
+  else window.sessionStorage.setItem('arc-xray', '1');
+  const url = new URL(window.location.href);
+  url.searchParams.delete('xray');
+  window.location.replace(url.toString());
+});
+
 if (new URLSearchParams(window.location.search).has('arc-reset')) {
   // The boilerplate prerenders links on hover; only reset on a real visit.
   if (document.prerendering) {

@@ -39,7 +39,7 @@ async function readRequest(url, init, input) {
 const realFetch = window.fetch.bind(window);
 
 async function handle(input, init) {
-  const url = new URL(typeof input === 'string' ? input : input.url, window.location.href);
+  const url = new URL(input instanceof Request ? input.url : String(input), window.location.href);
   const req = await readRequest(url, init, input);
   const headers = readHeaders(init, input);
   const auth = headers.get('Authorization') || headers.get('authorization') || '';
@@ -59,7 +59,7 @@ async function handle(input, init) {
 
 window.fetch = function arcMockFetch(input, init) {
   try {
-    const raw = typeof input === 'string' ? input : input?.url;
+    const raw = input instanceof Request ? input.url : String(input);
     if (raw && raw.startsWith(MOCK_ORIGIN)) return handle(input, init);
   } catch (e) {
     // eslint-disable-next-line no-console

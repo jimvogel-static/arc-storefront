@@ -103,7 +103,7 @@ if (window.sessionStorage.getItem('arc-xray') === '1' && !document.prerendering)
 }
 
 // Look switcher: "Boilerplate" (brand tokens only) vs "Elevated" (design layer).
-// ?look=elevated / ?look=boilerplate, or the quiet footer link. Sticky for the session.
+// ?look=elevated / ?look=boilerplate, or the quiet link in the top bar. Sticky for the session.
 const lookParam = new URLSearchParams(window.location.search).get('look');
 if (lookParam === 'elevated') window.sessionStorage.setItem('pulse-look', 'elevated');
 if (lookParam === 'boilerplate') window.sessionStorage.removeItem('pulse-look');
@@ -115,27 +115,53 @@ if (isElevated && !document.prerendering) {
   });
 }
 
-// Quiet footer links: "X-ray" toggles the overlay, "Elevated look" toggles the design layer.
+// Presenter strip: the top announcement bar carries quiet links for
+// Reset demo, X-ray and the look switch (moved up from the footer).
+function buildTopbar() {
+  if (document.querySelector('.pulse-topbar')) return;
+  const xrayOn = window.sessionStorage.getItem('arc-xray') === '1';
+  const bar = document.createElement('div');
+  bar.className = 'pulse-topbar';
+  const msg = document.createElement('span');
+  msg.className = 'pulse-topbar__msg';
+  msg.textContent = 'Bounteous Pulse prototype storefront · demo data, no real orders · try code PULSE20';
+  const tools = document.createElement('span');
+  tools.className = 'pulse-topbar__tools';
+  [
+    ['reset', 'Reset demo', '/?arc-reset'],
+    ['xray', xrayOn ? 'X-ray off' : 'X-ray', '?xray'],
+    ['look', isElevated ? 'Boilerplate look' : 'Elevated look', isElevated ? '?look=boilerplate' : '?look=elevated'],
+  ].forEach(([tool, label, href]) => {
+    const a = document.createElement('a');
+    a.href = href;
+    a.dataset.pulseTool = tool;
+    a.textContent = label;
+    a.rel = 'nofollow';
+    tools.append(a);
+  });
+  bar.append(msg, tools);
+  document.body.prepend(bar);
+}
+if (document.body) buildTopbar();
+else document.addEventListener('DOMContentLoaded', buildTopbar, { once: true });
+
 document.addEventListener('click', (e) => {
-  const look = e.target.closest?.('footer a[href*="look="]');
-  if (look) {
-    e.preventDefault();
-    if (window.sessionStorage.getItem('pulse-look') === 'elevated') window.sessionStorage.removeItem('pulse-look');
-    else window.sessionStorage.setItem('pulse-look', 'elevated');
-    const u = new URL(window.location.href);
-    u.searchParams.delete('look');
-    window.location.replace(u.toString());
-    return;
-  }
-  const a = e.target.closest?.('a[href*="xray"]');
-  if (!a || !a.closest('footer')) return;
+  const a = e.target.closest?.('a[data-pulse-tool]');
+  if (!a) return;
+  const tool = a.dataset.pulseTool;
+  if (tool === 'reset') return; // plain navigation to /?arc-reset
   e.preventDefault();
-  const on = window.sessionStorage.getItem('arc-xray') === '1';
-  if (on) window.sessionStorage.removeItem('arc-xray');
-  else window.sessionStorage.setItem('arc-xray', '1');
-  const url = new URL(window.location.href);
-  url.searchParams.delete('xray');
-  window.location.replace(url.toString());
+  const u = new URL(window.location.href);
+  if (tool === 'look') {
+    if (isElevated) window.sessionStorage.removeItem('pulse-look');
+    else window.sessionStorage.setItem('pulse-look', 'elevated');
+    u.searchParams.delete('look');
+  } else if (tool === 'xray') {
+    if (window.sessionStorage.getItem('arc-xray') === '1') window.sessionStorage.removeItem('arc-xray');
+    else window.sessionStorage.setItem('arc-xray', '1');
+    u.searchParams.delete('xray');
+  }
+  window.location.replace(u.toString());
 });
 
 if (new URLSearchParams(window.location.search).has('arc-reset')) {

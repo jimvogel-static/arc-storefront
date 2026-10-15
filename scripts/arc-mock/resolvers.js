@@ -11,7 +11,16 @@ import {
 const r2 = (n) => Math.round(n * 100) / 100;
 const money = (v) => ({ value: r2(v), currency: CURRENCY });
 const ORIGIN = (typeof window !== 'undefined' && window.location?.origin) || '';
-const img = (name) => `${ORIGIN}/images/arc/${name}.svg`;
+// Photography exists for these images (published from DA under /images/products/).
+const PHOTOS = new Set(['ARC-HD-001-midnight-1', 'ARC-HD-001-midnight-2', 'ARC-HD-001-indigo-1', 'ARC-HD-001-indigo-2',
+  'ARC-TS-002-white-1', 'ARC-TS-002-white-2', 'ARC-TS-002-midnight-1', 'ARC-TS-002-midnight-2', 'ARC-QZ-003-1', 'ARC-QZ-003-2',
+  'ARC-CP-004-1', 'ARC-BN-005-1', 'ARC-BT-010-1', 'ARC-BT-010-2', 'ARC-MG-011-1', 'ARC-TB-012-1', 'ARC-GL-013-1',
+  'ARC-NB-020-1', 'ARC-NB-020-2', 'ARC-DM-021-1', 'ARC-PN-022-1', 'ARC-SK-023-1', 'ARC-TT-030-1', 'ARC-TT-030-2', 'ARC-PC-031-1']);
+const elevated = () => { try { return window.sessionStorage.getItem('pulse-look') === 'elevated'; } catch { return false; } };
+// Boilerplate look uses the flat illustrations; the Elevated look uses photography where it exists.
+const img = (name) => (elevated() && PHOTOS.has(name)
+  ? `${ORIGIN}/images/products/${name}.jpg`
+  : `${ORIGIN}/images/arc/${name}.svg`);
 const b64 = (s) => btoa(s);
 const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
 const TAX_RATE = 0.0825;
@@ -94,7 +103,7 @@ function optionsFor(p) {
       required: true,
       multi: false,
       values: p.sizes.map((s) => ({
-        __typename: 'ProductViewOptionValueSwatch', id: optUid(SIZE_ATTR, s), title: s, inStock: !(p.sku === 'ARC-HD-001' && s === 'XS'), type: 'TEXT', value: s,
+        __typename: 'ProductViewOptionValueSwatch', id: optUid(SIZE_ATTR, s), title: s, inStock: !(p.sku === 'PLS-HD-001' && s === 'XS'), type: 'TEXT', value: s,
       })),
     });
   }
@@ -123,7 +132,7 @@ export function productView(p, optionIds) {
     name: p.name,
     shortDescription: p.short,
     description: p.description,
-    metaTitle: `${p.name} | Bounteous ARC`,
+    metaTitle: `${p.name} | Bounteous Pulse`,
     metaDescription: p.short,
     metaKeyword: '',
     inStock: p.inStock !== false,
@@ -322,7 +331,7 @@ function categoryView(c) {
     roles: ['show_in_menu', 'active'],
     children: [],
     count: PRODUCTS.filter((p) => p.category === c.path).length,
-    metaTags: { title: `${c.name} | Bounteous ARC`, description: `Shop ARC ${c.name}`, keywords: '' },
+    metaTags: { title: `${c.name} | Bounteous Pulse`, description: `Shop Pulse ${c.name}`, keywords: '' },
     images: [],
   };
 }
@@ -339,7 +348,7 @@ function recommendations(args = {}) {
     results: unitIds.map((unitId, i) => ({
       unitId,
       unitName: 'You may also like',
-      storefrontLabel: current ? 'Complete the look' : 'Trending at ARC',
+      storefrontLabel: current ? 'Complete the look' : 'Trending at Pulse',
       typeId: 'more-like-this',
       pageType: current ? 'Product' : 'CMS',
       displayOrder: i + 1,
@@ -352,14 +361,14 @@ function recommendations(args = {}) {
 
 /* ---------------- carts (Core) ---------------- */
 const SHIPPING_METHODS = [
-  { carrier_code: 'arc', method_code: 'standard', carrier_title: 'ARC Shipping', method_title: 'Standard (3–5 business days)', amount: 5 },
-  { carrier_code: 'arc', method_code: 'express', carrier_title: 'ARC Shipping', method_title: 'Express (1–2 business days)', amount: 15 },
+  { carrier_code: 'arc', method_code: 'standard', carrier_title: 'Pulse Shipping', method_title: 'Standard (3–5 business days)', amount: 5 },
+  { carrier_code: 'arc', method_code: 'express', carrier_title: 'Pulse Shipping', method_title: 'Express (1–2 business days)', amount: 15 },
 ];
 const PAYMENT_METHODS = [
   { code: 'checkmo', title: 'Pay by invoice (demo, no charge)' },
   { code: 'banktransfer', title: 'Bank transfer (demo, no charge)' },
 ];
-const COUPONS = { ARC20: 0.2, BOUNTEOUS10: 0.1 };
+const COUPONS = { PULSE20: 0.2, ARC20: 0.2, BOUNTEOUS10: 0.1 };
 
 const carts = () => store.get('carts', {});
 const saveCarts = (c) => store.set('carts', c);
@@ -588,7 +597,7 @@ const DEMO_CUSTOMER = {
   lastname: 'Quinn',
   email: 'avery.quinn@example.com',
   addresses: [{
-    id: 1, firstname: 'Avery', lastname: 'Quinn', street: ['1 Demo Plaza', 'Suite 400'], city: 'Chicago', region: 'IL', region_id: 23, postcode: '60601', country_code: 'US', telephone: '3125550142', company: 'Bounteous ARC (demo)', default_shipping: true, default_billing: true,
+    id: 1, firstname: 'Avery', lastname: 'Quinn', street: ['1 Demo Plaza', 'Suite 400'], city: 'Chicago', region: 'IL', region_id: 23, postcode: '60601', country_code: 'US', telephone: '3125550142', company: 'Bounteous Pulse (demo)', default_shipping: true, default_billing: true,
   }],
 };
 const getCustomer = () => store.get('customer', DEMO_CUSTOMER);
@@ -711,7 +720,7 @@ function orderView(o) {
     token: o.token,
     email: o.email,
     is_virtual: false,
-    carrier: 'ARC Shipping',
+    carrier: 'Pulse Shipping',
     shipping_method: o.shipping_title,
     available_actions: [],
     applied_coupons: (o.coupons || []).map((code) => ({ code })),
@@ -764,8 +773,8 @@ function seedOrders() {
     };
   };
   const orders = [
-    mk('000000042', '2026-09-18 14:22:10', 'Complete', [['ARC-BT-010', 2], ['ARC-NB-020', 3]]),
-    mk('000000057', '2026-10-02 09:41:55', 'Processing', [['ARC-HD-001', 1, [optUid(COLOR_ATTR, 'midnight'), optUid(SIZE_ATTR, 'L')]], ['ARC-CP-004', 1]]),
+    mk('000000042', '2026-09-18 14:22:10', 'Complete', [['PLS-BT-010', 2], ['PLS-NB-020', 3]]),
+    mk('000000057', '2026-10-02 09:41:55', 'Processing', [['PLS-HD-001', 1, [optUid(COLOR_ATTR, 'midnight'), optUid(SIZE_ATTR, 'L')]], ['PLS-CP-004', 1]]),
   ];
   store.set('orders', orders);
   return orders;
@@ -875,7 +884,7 @@ function findOrder({ number, token }) {
 /* ---------------- store config ---------------- */
 const STORE_CONFIG = {
   store_code: 'default',
-  store_name: 'Bounteous ARC Store',
+  store_name: 'Bounteous Pulse Store',
   store_group_code: 'main_website_store',
   website_code: 'base',
   locale: 'en_US',
@@ -1008,7 +1017,7 @@ const PAYMENT_CONFIG = {
 const AGREEMENTS = [{
   agreement_id: 1,
   name: 'Prototype notice',
-  content: 'This is a Bounteous ARC prototype storefront. No payment is taken and no goods ship.',
+  content: 'This is a Bounteous Pulse prototype storefront. No payment is taken and no goods ship.',
   checkbox_text: 'I understand this is a demo and no real order is placed',
   is_html: false,
   mode: 'MANUAL',
@@ -1129,14 +1138,14 @@ export const coreResolvers = {
     applyCouponToCart: (args) => {
       const input = args.input || {};
       const code = String(input.coupon_code || '').toUpperCase();
-      if (!COUPONS[code]) throw new Error(`The coupon code "${input.coupon_code}" is not valid. Try ARC20.`);
+      if (!COUPONS[code]) throw new Error(`The coupon code "${input.coupon_code}" is not valid. Try PULSE20.`);
       return { cart: mutateCart(input, (s) => { s.coupons = [code]; }) };
     },
     applyCouponsToCart: (args) => {
       const input = args.input || {};
       const codes = (input.coupon_codes || []).map((c) => String(c).toUpperCase());
       const bad = codes.find((c) => !COUPONS[c]);
-      if (bad) throw new Error(`The coupon code "${bad}" is not valid. Try ARC20.`);
+      if (bad) throw new Error(`The coupon code "${bad}" is not valid. Try PULSE20.`);
       return { cart: mutateCart(input, (s) => { s.coupons = input.type === 'APPEND' ? [...new Set([...(s.coupons || []), ...codes])] : codes; }) };
     },
     removeCouponFromCart: (args) => ({ cart: mutateCart(args.input || {}, (s) => { s.coupons = []; }) }),

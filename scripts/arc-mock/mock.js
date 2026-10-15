@@ -76,7 +76,9 @@ function clearDemoState() {
   Object.keys(window.localStorage)
     .filter((k) => k.startsWith('arc-mock:') || /^DROPIN__/.test(k) || /productViewHistory|purchaseHistory/.test(k))
     .forEach((k) => window.localStorage.removeItem(k));
-  Object.keys(window.sessionStorage).forEach((k) => window.sessionStorage.removeItem(k));
+  // keep presenter preferences (look, X-ray) across a reset
+  Object.keys(window.sessionStorage).filter((k) => !/^(pulse-look|arc-xray)/.test(k))
+    .forEach((k) => window.sessionStorage.removeItem(k));
   document.cookie.split(';').map((c) => c.split('=')[0].trim()).filter((n) => /dropin|cart|auth/i.test(n))
     .forEach((n) => { document.cookie = `${n}=; Max-Age=0; path=/`; });
 }
@@ -100,8 +102,31 @@ if (window.sessionStorage.getItem('arc-xray') === '1' && !document.prerendering)
   });
 }
 
-// The quiet footer "X-ray" link toggles the overlay on the current page.
+// Look switcher: "Boilerplate" (brand tokens only) vs "Elevated" (design layer).
+// ?look=elevated / ?look=boilerplate, or the quiet footer link. Sticky for the session.
+const lookParam = new URLSearchParams(window.location.search).get('look');
+if (lookParam === 'elevated') window.sessionStorage.setItem('pulse-look', 'elevated');
+if (lookParam === 'boilerplate') window.sessionStorage.removeItem('pulse-look');
+const isElevated = window.sessionStorage.getItem('pulse-look') === 'elevated';
+document.documentElement.classList.toggle('look-elevated', isElevated);
+if (isElevated && !document.prerendering) {
+  window.addEventListener('load', () => {
+    import('../arc-elevated.js').then((m) => m.default()).catch((e) => console.warn('[Pulse elevated]', e)); // eslint-disable-line no-console
+  });
+}
+
+// Quiet footer links: "X-ray" toggles the overlay, "Elevated look" toggles the design layer.
 document.addEventListener('click', (e) => {
+  const look = e.target.closest?.('footer a[href*="look="]');
+  if (look) {
+    e.preventDefault();
+    if (window.sessionStorage.getItem('pulse-look') === 'elevated') window.sessionStorage.removeItem('pulse-look');
+    else window.sessionStorage.setItem('pulse-look', 'elevated');
+    const u = new URL(window.location.href);
+    u.searchParams.delete('look');
+    window.location.replace(u.toString());
+    return;
+  }
   const a = e.target.closest?.('a[href*="xray"]');
   if (!a || !a.closest('footer')) return;
   e.preventDefault();

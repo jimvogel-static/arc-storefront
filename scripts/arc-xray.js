@@ -109,7 +109,11 @@ function targets() {
   const header = document.querySelector('header .header');
   const footer = document.querySelector('footer .footer');
   if (header) list.push(['header', header]);
-  document.querySelectorAll('main .block[data-block-name]').forEach((b) => list.push([b.dataset.blockName, b]));
+  document.querySelectorAll('main .block[data-block-name]').forEach((b) => {
+    const sec = b.closest('.section');
+    if (sec && getComputedStyle(sec).display === 'none') return; // belongs to the other look
+    list.push([b.dataset.blockName, b]);
+  });
   if (footer) list.push(['footer', footer]);
   document.querySelectorAll('[data-pulse-custom]').forEach((n) => list.push([`custom:${n.dataset.pulseCustom}`, n]));
   return list;

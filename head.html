@@ -4,6 +4,7 @@
   move-to-http-header="true"
 />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
 <script nonce="aem" type="speculationrules">
     {
         "prerender": [{
@@ -33,7 +34,14 @@
     }
 </script>
 
+<!-- ARC prototype: in-browser commerce mock. Must load before any drop-in. -->
+<script nonce="aem" src="/scripts/arc-mock/mock.js" type="module"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,200..700&display=swap" />
 <link rel="stylesheet" href="/styles/styles.css" />
+<link rel="stylesheet" href="/styles/arc-theme.css" />
 
 <script nonce="aem" type="module">
     if (!(HTMLScriptElement.supports?.('importmap'))) {
@@ -45,6 +53,9 @@
 <script nonce="aem" src="/scripts/scripts.js" type="module"></script>
 <script nonce="aem" src="/scripts/commerce.js" type="module"></script>
 
+<link rel="modulepreload" href="/scripts/arc-mock/gql.js" />
+<link rel="modulepreload" href="/scripts/arc-mock/resolvers.js" />
+<link rel="modulepreload" href="/scripts/arc-mock/catalog.js" />
 <link rel="modulepreload" href="/scripts/__dropins__/tools/lib/aem/configs.js" />
 <link rel="modulepreload" href="/scripts/initializers/index.js" />
 <link rel="modulepreload" href="/scripts/initializers/auth.js" />

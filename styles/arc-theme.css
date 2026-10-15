@@ -217,10 +217,18 @@ header nav .nav-brand strong {
   padding: 0.6rem 1rem;
 }
 
+header nav .nav-brand,
+header nav .nav-brand a { white-space: nowrap; }
+
 header nav .nav-sections ul > li > a,
-header nav .nav-sections ul > li {
+header nav .nav-sections ul > li,
+header nav .nav-sections ul > li > p {
   color: var(--arc-midnight);
+  font: var(--type-body-2-strong-font) !important;
 }
+
+/* links inside dark sections */
+main .section.dark a:not(.button, .dropin-design a) { color: var(--arc-purple); }
 
 @media (min-width: 900px) {
   header nav .nav-sections .default-content-wrapper > ul > li:hover,
@@ -395,10 +403,19 @@ main .section.dark .default-content-wrapper ul > li::before { color: var(--arc-p
 .dropin-card--secondary { background: var(--color-neutral-200); border: 0; }
 
 /* ---------- footer ---------- */
-footer {
-  background: var(--arc-midnight);
+footer,
+footer.footer-wrapper,
+footer .footer-wrapper {
+  background: var(--arc-midnight) !important;
   color: #fff;
 }
+
+footer .footer .section > div {
+  padding-top: var(--spacing-big);
+  padding-bottom: var(--spacing-big);
+}
+
+footer .footer p { color: rgb(255 255 255 / 78%); }
 
 footer .footer {
   color: #fff;

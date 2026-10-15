@@ -8,7 +8,7 @@
 const COLORS = {
   boilerplate: '#34B3FF', // Electric Blue: stock boilerplate block
   arc: '#FF4F59', // Coral: added for the ARC prototype
-  dropin: '#853EFF', // Purple Rain: Commerce drop-in packages used by the block
+  dropin: '#C7B1FF', // Purple Rain 300: readable on Midnight; Commerce drop-ins used by the block
 };
 
 // Block → what it is. "dropins" lists the @dropins/* packages the block's JS imports.
@@ -154,7 +154,7 @@ function panel() {
     + 'background:#0B111C;color:#fff;font:400 13px/1.5 \'Nunito Sans\',system-ui,sans-serif;box-shadow:0 12px 40px rgb(0 0 0 / 35%);');
   p.id = 'arc-xray-panel';
   const collapsed = window.sessionStorage.getItem('arc-xray-min') === '1';
-  const head = el('div', 'font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#853EFF;cursor:pointer;pointer-events:auto;',
+  const head = el('div', 'font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#C7B1FF;cursor:pointer;pointer-events:auto;',
     collapsed ? 'ARC X-ray  ▸  show details' : 'ARC X-ray  ▾  hide details');
   head.addEventListener('click', () => {
     window.sessionStorage.setItem('arc-xray-min', collapsed ? '0' : '1');

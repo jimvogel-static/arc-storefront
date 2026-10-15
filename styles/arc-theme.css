@@ -232,6 +232,24 @@ header nav .nav-sections ul > li > p {
   font: var(--type-body-2-strong-font) !important;
 }
 
+/* make the Account dropdown match the other nav links */
+header nav .nav-sections .nav-drop,
+header nav .nav-sections .nav-drop > p,
+header nav .nav-sections .nav-drop > span,
+header nav .nav-sections .default-content-wrapper > ul > li > a {
+  color: var(--arc-violet) !important;
+  font: var(--type-body-1-strong-font) !important;
+}
+
+/* keep "Hi, Avery" on one line */
+header .nav-dropdown-button,
+header .dropdown-wrapper.nav-tools-wrapper .nav-dropdown-button {
+  white-space: nowrap;
+  color: var(--arc-indigo);
+  font: var(--type-body-2-strong-font) !important;
+  padding: 0 0.4rem !important;
+}
+
 /* links inside dark sections */
 main .section.dark a:not(.button, .dropin-design a) { color: var(--arc-purple); }
 

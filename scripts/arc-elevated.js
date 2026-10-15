@@ -65,7 +65,8 @@ function buyBar() {
     const sync = () => {
       name.textContent = title.textContent.trim();
       price.textContent = pd.querySelector('.product-details__price')?.textContent.trim() || '';
-      const src = pd.querySelector('.product-details__left-column img, .product-details__gallery img')?.currentSrc;
+      const im = pd.querySelector('.product-details__left-column img, .product-details__gallery img');
+      const src = im?.currentSrc || im?.src;
       if (src) thumb.src = src;
       const real = pd.querySelector('.product-details__buttons__add-to-cart button');
       cta.textContent = real?.disabled ? 'Choose options' : 'Add to Cart';

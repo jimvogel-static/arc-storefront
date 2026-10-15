@@ -836,7 +836,7 @@ function placeOrder(args, ctx) {
   const number = String(100 + all.length).padStart(9, '0');
   const o = {
     number,
-    date: new Date().toISOString().replace('T', ' ').slice(0, 19),
+    date: (() => { const d = new Date(); const p = (n) => String(n).padStart(2, '0'); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`; })(),
     status: 'Processing',
     token: b64(`tok-${number}-${uid()}`),
     email: state.email || getCustomer().email,

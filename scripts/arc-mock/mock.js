@@ -88,6 +88,18 @@ window.arcMock = {
   },
 };
 
+// Presenter X-ray overlay: ?xray turns it on (sticky for the session), ?xray=off turns it off.
+const xrayParam = new URLSearchParams(window.location.search).get('xray');
+if (xrayParam !== null) {
+  if (xrayParam === 'off' || xrayParam === '0') window.sessionStorage.removeItem('arc-xray');
+  else window.sessionStorage.setItem('arc-xray', '1');
+}
+if (window.sessionStorage.getItem('arc-xray') === '1' && !document.prerendering) {
+  window.addEventListener('load', () => {
+    import('../arc-xray.js').then((m) => m.default()).catch((e) => console.warn('[ARC x-ray]', e)); // eslint-disable-line no-console
+  });
+}
+
 if (new URLSearchParams(window.location.search).has('arc-reset')) {
   // The boilerplate prerenders links on hover; only reset on a real visit.
   if (document.prerendering) {

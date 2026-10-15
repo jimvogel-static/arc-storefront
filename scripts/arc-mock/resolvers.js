@@ -956,7 +956,6 @@ const ADDRESS_FORM = [
   ['street', 'Street Address', 'MULTILINE', true, 40, 2],
   ['country_id', 'Country', 'SELECT', true, 50],
   ['region', 'State/Province', 'TEXT', false, 60],
-  ['region_id', 'State/Province', 'SELECT', false, 61],
   ['city', 'City', 'TEXT', true, 70],
   ['postcode', 'Zip/Postal Code', 'TEXT', true, 80],
   ['telephone', 'Phone Number', 'TEXT', true, 90],

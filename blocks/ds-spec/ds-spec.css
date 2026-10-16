@@ -1,5 +1,6 @@
 /* ds-spec: Pulse Design System spec card (documentation only). */
 main .section.ds-section { padding-top: 24px; padding-bottom: 24px; }
+main .section.ds-section.hero-container { background: transparent; }
 
 .ds-spec {
   --ds-blue: #34b3ff;
@@ -198,9 +199,12 @@ main .section .ds-inline-stage {
   border: 2px dashed var(--color-neutral-400);
   border-radius: 20px;
   background: var(--color-neutral-100);
+  isolation: isolate;
+  overflow: hidden;
 }
 
 main .section .ds-inline-stage::before {
+  z-index: 2;
   content: attr(data-ds-label);
   position: absolute;
   top: 10px;
@@ -214,3 +218,7 @@ main .section .ds-inline-stage::before {
 }
 
 .ds-modal-demo { padding: 8px 4px; max-width: 520px; }
+
+.ds-spec-demo { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.ds-spec-demo .button { margin: 0; }
+.ds-spec-status { font: var(--type-body-2-strong-font); color: var(--color-neutral-700); }

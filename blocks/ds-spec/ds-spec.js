@@ -178,6 +178,39 @@ export default function decorate(block) {
     block.append(btnWrap);
   }
 
+  if (text('demo') === 'session') {
+    // Prepare the demo: real drop-in APIs against the in-browser demo data.
+    const wrap = el('p', 'ds-spec-demo');
+    const status = el('span', 'ds-spec-status');
+    const reloadFrames = () => document.querySelectorAll('.ds-stage iframe').forEach((f) => {
+      const path = new URL(f.getAttribute('src'), window.location.origin);
+      f.src = path.pathname + path.search;
+    });
+    const signedIn = () => /auth_dropin_user_token=/.test(document.cookie);
+    const setStatus = () => {
+      status.textContent = signedIn() ? 'Signed in as the demo customer.' : 'Signed out.';
+    };
+    const signBtn = el('button', 'button primary', 'Sign in as the demo customer');
+    signBtn.type = 'button';
+    signBtn.addEventListener('click', async () => {
+      const auth = await import('@dropins/storefront-auth/api.js');
+      await auth.getCustomerToken({ email: 'avery@example.com', password: 'Demo1234!' });
+      setStatus();
+      reloadFrames();
+    });
+    const cartBtn = el('button', 'button secondary', 'Add sample items to the cart');
+    cartBtn.type = 'button';
+    cartBtn.addEventListener('click', async () => {
+      const cart = await import('@dropins/storefront-cart/api.js');
+      await cart.addProductsToCart([{ sku: 'PLS-BT-010', quantity: 1 }, { sku: 'PLS-MG-011', quantity: 2 }]);
+      status.textContent = 'Added a bottle and two mugs to the cart.';
+      reloadFrames();
+    });
+    wrap.append(signBtn, cartBtn, status);
+    block.append(wrap);
+    setStatus();
+  }
+
   const section = block.closest('.section');
   section?.classList.add('ds-section');
 

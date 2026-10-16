@@ -222,3 +222,4 @@ main .section .ds-inline-stage::before {
 .ds-spec-demo { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
 .ds-spec-demo .button { margin: 0; }
 .ds-spec-status { font: var(--type-body-2-strong-font); color: var(--color-neutral-700); }
+.ds-spec-parts td p { margin: 0; }

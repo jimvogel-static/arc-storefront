@@ -582,3 +582,11 @@ footer .footer .default-content-wrapper:first-child p:first-child::before {
   margin-bottom: 1.2rem;
   background: url('https://www.bounteous.com/sites/default/files/bounteouslogos/BNT_WHITE_RGB.svg') left center / contain no-repeat;
 }
+
+/* ---- Design System specimen frames (see mock.js "ds-embed") ---- */
+html.ds-embed .pulse-topbar,
+html.ds-embed body > header,
+html.ds-embed body > footer { display: none !important; }
+html.ds-embed body { grid-template-rows: 1fr; }
+html.ds-embed main { grid-row: 1; }
+html.ds-embed main > .section:first-child { padding-top: 24px; }

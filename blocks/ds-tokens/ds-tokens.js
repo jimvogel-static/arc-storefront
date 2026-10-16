@@ -142,14 +142,14 @@ async function renderUiKit(block) {
     ['ToggleButton', '', () => [ui.ToggleButton, { name: 'ds-toggle', value: 'a', label: 'Ship to this address', selected: true }]],
     ['Incrementer', 'quantity', () => [ui.Incrementer, { name: 'ds-qty', value: 2, min: 1, max: 10 }]],
     ['Price', 'regular', () => [ui.Price, { amount: 68, currency: 'USD' }]],
-    ['Price', 'sale', () => [ui.Price, { amount: 40, currency: 'USD', variant: 'strikethrough' }]],
+    ['Price', 'sale', () => [[ui.Price, { amount: 68, currency: 'USD', variant: 'strikethrough' }], [ui.Price, { amount: 40, currency: 'USD', sale: true }]]],
     ['TextSwatch', 'size', () => [ui.TextSwatch, { name: 'ds-ts', value: 'L', label: 'L', id: 'ds-ts-l', selected: true }]],
     ['ColorSwatch', 'color', () => [ui.ColorSwatch, { name: 'ds-cs', value: 'midnight', label: 'Midnight', id: 'ds-cs-1', color: '#0b111c', selected: true }]],
     ['Tag', '', () => [ui.Tag, { label: 'New' }]],
     ['InLineAlert', 'success', () => [ui.InLineAlert, { type: 'success', heading: 'Coupon applied', description: 'PULSE20 took 20% off.' }]],
     ['InLineAlert', 'error', () => [ui.InLineAlert, { type: 'error', heading: 'Payment declined', description: 'Try another card.' }]],
     ['ProgressSpinner', '', () => [ui.ProgressSpinner, { size: 'medium' }]],
-    ['Skeleton', 'loading', () => [ui.Skeleton, { children: [] }]],
+    ['SkeletonRow', 'loading', () => [[ui.SkeletonRow, { variant: 'heading', size: 'medium', fullWidth: true }], [ui.SkeletonRow, { size: 'small', fullWidth: true, lines: 2 }]]],
   ];
   const grid = el('div', 'ds-uikit');
   items.forEach(([name, variant, make]) => {
@@ -159,9 +159,14 @@ async function renderUiKit(block) {
     card.append(stage);
     grid.append(card);
     try {
-      const [Comp, props] = make();
-      if (!Comp) throw new Error('not exported');
-      UI.render(Comp, props)(stage);
+      const spec = make();
+      const list = Array.isArray(spec[0]) ? spec : [spec];
+      list.forEach(([Comp, props]) => {
+        if (!Comp) throw new Error('not exported');
+        const slot = el('div', 'ds-uikit-slot');
+        stage.append(slot);
+        UI.render(Comp, props)(slot);
+      });
     } catch (e) {
       stage.innerHTML = '<span class="ds-val">Not available in this SDK version</span>';
     }

@@ -127,3 +127,5 @@
 .ds-uikit-name span { color: var(--color-neutral-700); font-weight: 400; }
 .ds-uikit-stage { min-height: 48px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 .ds-uikit-stage > * { max-width: 100%; }
+.ds-uikit-slot { min-width: 0; }
+.ds-uikit-stage .ds-uikit-slot:has([class*='skeleton']) { flex: 1 1 100%; }

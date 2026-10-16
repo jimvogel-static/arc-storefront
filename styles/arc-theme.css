@@ -590,3 +590,4 @@ html.ds-embed body > footer { display: none !important; }
 html.ds-embed body { grid-template-rows: 1fr; }
 html.ds-embed main { grid-row: 1; }
 html.ds-embed main > .section:first-child { padding-top: 24px; }
+html.ds-embed main > .ds-embed-hide { display: none !important; }

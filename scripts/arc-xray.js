@@ -17,6 +17,8 @@ const BLOCKS = {
   footer: { kind: 'boilerplate', label: 'Footer', note: 'Content from the /footer document' },
   'arc-hero': { kind: 'arc', label: 'Prototype Hero', note: 'Added for the prototype: simple content block' },
   'arc-tiles': { kind: 'arc', label: 'Prototype Category Tiles', note: 'Added for the prototype: simple content block' },
+  'ds-spec': { kind: 'arc', label: 'Design System Spec Card', note: 'Added for the prototype: documentation only' },
+  'ds-tokens': { kind: 'arc', label: 'Design System Token Sheet', note: 'Added for the prototype: reads tokens live from the theme', dropins: ['tools (UI kit components)'] },
   hero: { kind: 'boilerplate', label: 'Hero' },
   cards: { kind: 'boilerplate', label: 'Cards' },
   columns: { kind: 'boilerplate', label: 'Columns' },
@@ -63,6 +65,7 @@ const BLOCKS = {
 function pageTemplate() {
   const p = window.location.pathname;
   const has = (b) => !!document.querySelector(`main .${b}`);
+  if (p.startsWith('/design-system')) return ['Design System page', 'Added for the prototype. Authored in DA.live with two documentation blocks; every specimen on it is a stock block or drop-in running live.'];
   if (p === '/' || p === '/index') return ['Home', 'A content page authored in DA.live. Boilerplate look: two small added blocks. Elevated look: stock Hero, Cards and Columns blocks. Recommendations in both.'];
   if (p.startsWith('/products/')) return ['Product page (PDP)', 'One template document (/products/default) serves every product URL via folder mapping. The SKU comes from the URL.'];
   if (has('product-list-page')) {

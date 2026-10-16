@@ -87,12 +87,17 @@ async function openModalDemo() {
 export default function decorate(block) {
   const facts = {};
   const parts = [];
+  let partHeads = ['Name', 'Block', 'Drop-in containers', 'Notes'];
   [...block.children].forEach((row) => {
     const cells = [...row.children];
     const key = (cells[0]?.textContent || '').trim().toLowerCase();
     if (!key) return;
     if (key === 'part') {
       parts.push(cells.slice(1).map((c) => c.innerHTML.trim()));
+      return;
+    }
+    if (key === 'columns') {
+      partHeads = cells.slice(1).map((c) => c.textContent.trim());
       return;
     }
     facts[key] = cells[1] || el('div');
@@ -151,14 +156,14 @@ export default function decorate(block) {
 
   if (parts.length) {
     const wrap = el('div', 'ds-spec-parts');
-    wrap.append(el('h4', '', 'Parts'));
+    wrap.append(el('h4', '', text('parts title') || 'Parts'));
     const table = el('table');
-    table.innerHTML = '<thead><tr><th>Name</th><th>Block</th><th>Drop-in containers</th><th>Notes</th></tr></thead>';
+    table.innerHTML = `<thead><tr>${partHeads.map((t) => `<th>${t}</th>`).join('')}</tr></thead>`;
     const tb = el('tbody');
     parts.forEach((p) => {
       const tr = el('tr');
-      for (let i = 0; i < 4; i += 1) {
-        const td = el('td', i === 1 ? 'ds-mono' : '', p[i] || '');
+      for (let i = 0; i < partHeads.length; i += 1) {
+        const td = el('td', i === 1 && partHeads[1] === 'Block' ? 'ds-mono' : '', p[i] || '');
         if (i === 0) td.innerHTML = `<strong>${p[0] || ''}</strong>`;
         tr.append(td);
       }

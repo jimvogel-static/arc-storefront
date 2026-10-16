@@ -115,10 +115,44 @@ if (isElevated && !document.prerendering) {
   });
 }
 
+// Design System specimens: a page loaded in a frame named "ds-embed[:block]"
+// (or with ?embed=block) shows only its main content, and only the section
+// holding that block when it exists. The frame name survives navigation, so a
+// specimen stays clean when you click through it (for example, to sign in).
+const embedQuery = new URLSearchParams(window.location.search).get('embed');
+const embedName = (window.name || '').startsWith('ds-embed')
+  ? window.name
+  : (embedQuery !== null ? `ds-embed:${embedQuery}` : '');
+if (embedName) {
+  document.documentElement.classList.add('ds-embed');
+  const target = embedName.split(':')[1];
+  if (target && /^[a-z0-9-]+$/.test(target)) {
+    const isolate = () => {
+      const main = document.querySelector('main');
+      if (!main) return;
+      const sections = [...main.querySelectorAll(':scope > .section, :scope > div')];
+      const hit = sections.filter((s) => s.querySelector(`.${target}`));
+      if (!hit.length) return;
+      sections.forEach((s) => { s.style.display = hit.includes(s) ? '' : 'none'; });
+    };
+    const start = () => {
+      isolate();
+      const main = document.querySelector('main');
+      if (main) {
+        const mo = new MutationObserver(isolate);
+        mo.observe(main, { childList: true });
+        setTimeout(() => mo.disconnect(), 8000);
+      }
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
+    else start();
+  }
+}
+
 // Presenter strip: the top announcement bar carries quiet links for
 // Reset demo, X-ray and the look switch (moved up from the footer).
 function buildTopbar() {
-  if (document.querySelector('.pulse-topbar')) return;
+  if (embedName || document.querySelector('.pulse-topbar')) return;
   const xrayOn = window.sessionStorage.getItem('arc-xray') === '1';
   const bar = document.createElement('div');
   bar.className = 'pulse-topbar';

@@ -133,7 +133,7 @@ if (embedName) {
       const sections = [...main.querySelectorAll(':scope > .section, :scope > div')];
       const hit = sections.filter((s) => s.querySelector(`.${target}`));
       if (!hit.length) return;
-      sections.forEach((s) => { s.style.display = hit.includes(s) ? '' : 'none'; });
+      sections.forEach((s) => s.classList.toggle('ds-embed-hide', !hit.includes(s)));
     };
     const start = () => {
       isolate();

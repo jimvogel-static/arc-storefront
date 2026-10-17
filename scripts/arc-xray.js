@@ -5,6 +5,8 @@
  * nothing about the boilerplate's own markup or behavior.
  */
 
+// Which build this is, shown in the X-ray panel.
+const SITE = { label: 'Adobe Commerce boilerplate, as shipped (no Bounteous additions)', color: '#34B3FF' };
 const COLORS = {
   boilerplate: '#34B3FF', // Electric Blue: stock boilerplate block
   arc: '#FF4F59', // Coral: added for this prototype (blocks and custom touches)
@@ -178,6 +180,7 @@ function panel() {
   }
   p.append(el('div', 'font-weight:700;font-size:17px;margin:2px 0 4px;', tpl));
   p.append(el('div', 'opacity:.8;', tplNote));
+  p.append(el('div', `margin-top:8px;padding:6px 10px;border-radius:10px;background:${SITE.color}22;color:${SITE.color};font-weight:700;`, SITE.label));
   p.append(el('div', 'margin-top:10px;', `Document: ${window.location.pathname.startsWith('/products/') ? '/products/default' : window.location.pathname}`));
   p.append(el('div', '', `Blocks on page: ${blocks.length} (${arcCount} added for the prototype)`));
   p.append(el('div', '', `Drop-ins in use: ${[...dropins].join(', ') || 'none'}`));

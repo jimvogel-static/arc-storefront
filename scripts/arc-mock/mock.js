@@ -158,7 +158,7 @@ function buildTopbar() {
   bar.className = 'pulse-topbar';
   const msg = document.createElement('span');
   msg.className = 'pulse-topbar__msg';
-  msg.textContent = 'Bounteous Pulse prototype storefront · demo data, no real orders · try code PULSE20';
+  msg.textContent = 'Adobe Commerce boilerplate, as shipped (reference build) · Pulse demo data, no real orders · try code PULSE20';
   const tools = document.createElement('span');
   tools.className = 'pulse-topbar__tools';
   [
